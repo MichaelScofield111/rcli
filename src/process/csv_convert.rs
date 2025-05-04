@@ -3,7 +3,7 @@ use std::fs;
 use csv::Reader;
 use serde::{Deserialize, Serialize};
 
-use crate::opts::OutputFormat;
+use crate::cli::OutputFormat;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
