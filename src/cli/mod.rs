@@ -4,6 +4,7 @@ mod genpass;
 
 use std::path::Path;
 
+pub use self::base64::Base64Format;
 pub use self::csv::OutputFormat;
 pub use base64::Base64SubCommand;
 use clap::Parser;
@@ -33,5 +34,18 @@ fn verify_input_file(filename: &str) -> Result<String, &'static str> {
         Ok(filename.into())
     } else {
         Err("File not found")
+    }
+}
+
+// unit test
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_verify_input_file() {
+        assert_eq!(verify_input_file("-"), Ok("-".into()));
+        assert_eq!(verify_input_file("*"), Err("File not found"));
+        assert_eq!(verify_input_file("cargo.toml"), Ok("cargo.toml".into()));
     }
 }

@@ -1,6 +1,6 @@
 // rcli csv -i input.csv -o output.json --heder -d','
 use clap::Parser;
-use rcli::{Base64SubCommand, process_csv};
+use rcli::{Base64SubCommand, process_csv, process_decode, process_encode};
 use rcli::{Opts, SubCommand, process_genpass};
 
 fn main() -> anyhow::Result<()> {
@@ -25,10 +25,10 @@ fn main() -> anyhow::Result<()> {
         }
         SubCommand::Base64(subcmd) => match subcmd {
             Base64SubCommand::Encode(opts) => {
-                println!("{:?}", opts);
+                process_encode(&opts.input, opts.format)?;
             }
             Base64SubCommand::Decode(opts) => {
-                println!("{:?}", opts);
+                process_decode(&opts.input, opts.format)?;
             }
         },
     }
