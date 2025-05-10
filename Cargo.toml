@@ -8,10 +8,12 @@ edition = "2024"
 [dependencies]
 anyhow = "1.0.98"
 base64 = "0.22.1"
+blake3 = "1.8.2"
 clap = { version = "4.5.37", features = ["derive"] }
 csv = "1.3.1"
-rand = "0.9.1"
+ed25519-dalek = { version = "2.1.1", features = ["rand_core"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 serde_yaml = "0.9.33"
 zxcvbn = "3.1.0"
+rand = "0.8.5"                                                  # 强制使用和 ed25519-dalek 兼容的版本
