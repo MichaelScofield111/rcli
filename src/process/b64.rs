@@ -36,7 +36,7 @@ mod tests {
 
     #[test]
     fn test_process_encode() {
-        let input = "cargo.toml";
+        let input = "Cargo.toml";
         let format = Base64Format::Standard;
         assert!(process_encode(input, format).is_ok());
     }
