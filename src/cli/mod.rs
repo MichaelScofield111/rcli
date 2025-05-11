@@ -64,6 +64,6 @@ mod tests {
     fn test_verify_input_file() {
         assert_eq!(verify_file("-"), Ok("-".into()));
         assert_eq!(verify_file("*"), Err("File not found"));
-        assert_eq!(verify_file("cargo.toml"), Ok("cargo.toml".into()));
+        assert_eq!(verify_file("Cargo.toml"), Ok("Cargo.toml".into()));
     }
 }
