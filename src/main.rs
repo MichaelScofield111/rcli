@@ -1,15 +1,17 @@
+// rcli csv -i input.csv -o output.json --heder -d','
 use std::fs;
 
-// rcli csv -i input.csv -o output.json --heder -d','
 use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
 use clap::Parser;
 use rcli::{
     Base64SubCommand, Opts, SubCommand, get_content, get_reader, process_csv, process_decode,
-    process_encode, process_genpass, process_text_key_generate, process_text_sign,
-    process_text_verify,
+    process_encode, process_genpass, process_http_serve, process_text_key_generate,
+    process_text_sign, process_text_verify,
 };
 
-fn main() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    tracing_subscriber::fmt::init();
     let opts = Opts::parse();
     match opts.cmd {
         SubCommand::Csv(opts) => {
@@ -68,6 +70,11 @@ fn main() -> anyhow::Result<()> {
                 for (k, v) in key {
                     fs::write(opts.output_path.join(k), v)?;
                 }
+            }
+        },
+        SubCommand::Http(subcmd) => match subcmd {
+            rcli::HttpSubCommand::Serve(opts) => {
+                process_http_serve(opts.dir, opts.port).await?;
             }
         },
     }

@@ -17,3 +17,7 @@ serde_json = "1.0.140"
 serde_yaml = "0.9.33"
 zxcvbn = "3.1.0"
 rand = "0.8.5"                                                  # 强制使用和 ed25519-dalek 兼容的版本
+tokio = { version = "1.45.0", features = ["rt", "rt-multi-thread", "macros", "net", "fs"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+axum = { version = "0.8.4", features = ["http2", "query", "tracing"] }
