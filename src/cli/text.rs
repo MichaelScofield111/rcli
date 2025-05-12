@@ -1,4 +1,8 @@
+use base64::{Engine, engine::general_purpose::URL_SAFE_NO_PAD};
 use std::{fmt, path::PathBuf, str::FromStr};
+use tokio::fs;
+
+use crate::CmdExecutor;
 
 use super::verify_file;
 use clap::Parser;
@@ -77,5 +81,52 @@ impl From<TextSignFormat> for &'static str {
 impl fmt::Display for TextSignFormat {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", Into::<&str>::into(*self))
+    }
+}
+
+impl CmdExecutor for TextSubCommand {
+    async fn execute(self) -> anyhow::Result<()> {
+        match self {
+            TextSubCommand::Sign(opts) => opts.execute().await,
+            TextSubCommand::Verify(opts) => opts.execute().await,
+            TextSubCommand::Generate(opts) => opts.execute().await,
+        }
+    }
+}
+
+impl CmdExecutor for TextSignOpts {
+    async fn execute(self) -> anyhow::Result<()> {
+        let mut reader = crate::get_reader(&self.input)?;
+        let key = crate::get_content(&self.key)?;
+        let sig = crate::process_text_sign(&mut reader, &key, self.format)?;
+        let encoded = URL_SAFE_NO_PAD.encode(sig);
+        println!("{}", encoded);
+        Ok(())
+    }
+}
+
+impl CmdExecutor for TextVerifyOpts {
+    async fn execute(self) -> anyhow::Result<()> {
+        let reader = crate::get_reader(&self.input)?;
+        let key = crate::get_content(&self.key)?;
+        let decoded = URL_SAFE_NO_PAD.decode(self.sig)?;
+        let verified = crate::process_text_verify(reader, &key, &decoded, self.format)?;
+        if verified {
+            println!("Signature verified");
+        } else {
+            println!("Signature not verified");
+        }
+
+        Ok(())
+    }
+}
+
+impl CmdExecutor for TextKeyGenerateOpts {
+    async fn execute(self) -> anyhow::Result<()> {
+        let key = crate::process_text_key_generate(self.format)?;
+        for (k, v) in key {
+            fs::write(self.output_path.join(k), v).await?;
+        }
+        Ok(())
     }
 }
