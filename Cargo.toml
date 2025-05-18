@@ -22,3 +22,5 @@ tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 axum = { version = "0.8.4", features = ["http2", "query", "tracing"] }
 tower-http = { version = "0.6.4", features = ["compression-full", "cors", "tracing", "fs"] }
+enum_dispatch = "0.3.13"
+jsonwebtoken = "9.3.1"

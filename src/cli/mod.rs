@@ -2,6 +2,7 @@ mod base64;
 mod csv;
 mod genpass;
 mod http;
+mod jwt;
 mod text;
 
 use std::path::{Path, PathBuf};
@@ -11,6 +12,8 @@ use crate::CmdExecutor;
 pub use self::base64::Base64Format;
 pub use self::csv::OutputFormat;
 pub use self::http::HttpSubCommand;
+pub use self::jwt::JwtSubCommand;
+pub use self::jwt::{JwtSignOpts, JwtVerifyOpts};
 pub use base64::Base64SubCommand;
 use clap::Parser;
 use csv::CsvOpts;
@@ -36,6 +39,8 @@ pub enum SubCommand {
     Text(TextSubCommand),
     #[command(subcommand, about = "HTTP server")]
     Http(HttpSubCommand),
+    #[command(subcommand, about = "JWT")]
+    Jwt(JwtSubCommand),
 }
 
 impl CmdExecutor for SubCommand {
@@ -46,6 +51,7 @@ impl CmdExecutor for SubCommand {
             SubCommand::Base64(cmd) => cmd.execute().await,
             SubCommand::Text(cmd) => cmd.execute().await,
             SubCommand::Http(cmd) => cmd.execute().await,
+            SubCommand::Jwt(cmd) => cmd.execute().await,
         }
     }
 }
